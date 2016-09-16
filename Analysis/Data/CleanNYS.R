@@ -31,4 +31,7 @@ NYSclean$Interval.Beginning.Time <- paste(substr(NYSclean$Interval.Beginning.Tim
                                           sep = "")
 #NYSclean$Interval.Beginning.Time <- chron(times = NYSclean$Interval.Beginning.Time, format = "h:m")
 
-str(NYSclean)
+## Create dummy variables from factor data
+NYSclean$Payment.EZPass <- as.numeric(NYSclean$Payment.Type..Cash.or.E.ZPass. == "E-ZPass")
+
+NYSclean$Weekday <- ifelse(NYSclean$Day == "Sat" | NYSclean$Day == "Sun", 0, 1)
