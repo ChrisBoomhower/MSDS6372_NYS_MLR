@@ -3,14 +3,19 @@
 ## MSDS 6372-401
 ## Project 1: Multiple Linear Regression Analysis
 ## 10/03/2016
+##
+## CleanNYS.R
 ##############################
 
-## Load required packages
+## Load Required libraries
 require(dplyr)
 require(chron)
 
-## Import raw data from disk (Had to split up original data set into multiple files for pushing to GitHub)
-setwd("Analysis/Data/")
+##############################################
+## Import raw data from disk (Had to split up
+## original data set into multiple files for
+## pushing to GitHub)
+##############################################
 NYS <- NULL
 for(i in 1:5){
     NYS.temp <- read.table(paste("NYS", i, ".csv", sep = ""), sep = ",", header = TRUE )#stringsAsFactors = FALSE)
@@ -19,7 +24,10 @@ for(i in 1:5){
 
 str(NYS)
 
-## Rename long variable names
+##############################################
+## Begin Data Cleanup
+##############################################
+## Rename variable names
 NYSclean <- rename(NYS, Pay.Type. = Payment.Type..Cash.or.E.ZPass.)
 NYSclean <- rename(NYSclean, Time = Interval.Beginning.Time)
 NYSclean <- rename(NYSclean, Vehicle.Class. = Vehicle.Class)
@@ -59,21 +67,4 @@ levels(NYSclean$Period.) <- c("nonpeak", "peak", "nonpeak", "peak", "nonpeak")
 levels(NYSclean$Period.)
 
 str(NYSclean)
-head(NYSclean, 40)
-
-##############################################
-## Randomly sample NYSclean
-##############################################
-set.seed(10) #Seed set for reproducibility
-NYSample <- NYSclean[sample(nrow(NYSclean), 1000),]
-
-##############################################
-## Perform EDA
-##############################################
-## Generate initial model to assess fit
-fit <- lm(Vehicle.Count ~ Day.Type. + Period. + Vehicle.Class. + Pay.Type., data = NYSample)
-summary(fit)
-
-## Generate diagnostic plots
-layout(matrix(c(1,2,3,4),2,2)) # optional 4 graphs/page 
-plot(fit)
+head(NYSclean, 20)
