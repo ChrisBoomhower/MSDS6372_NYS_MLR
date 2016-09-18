@@ -10,6 +10,7 @@
 ## Load Required libraries
 require(dplyr)
 require(chron)
+require(timeDate)
 
 ##############################################
 ## Import raw data from disk (Had to split up
@@ -65,6 +66,23 @@ NYSclean$Period. <- cut(NYSclean$Time, breaks = c(0, 600, 1000, 1500, 1900, 2359
 levels(NYSclean$Period.)
 levels(NYSclean$Period.) <- c("nonpeak", "peak", "nonpeak", "peak", "nonpeak")
 levels(NYSclean$Period.)
+
+#############################################
+## Define Holidays and holiday field
+#############################################
+hlist <- c("USChristmasDay","USGoodFriday","USIndependenceDay","USLaborDay",
+           "USNewYearsDay","USThanksgivingDay","USMLKingsBirthday",
+           "USLincolnsBirthday","USWashingtonsBirthday","USMemorialDay",
+           "USColumbusDay","USElectionDay","USVeteransDay","USGoodFriday")
+myholidays  <- dates(as.character(holiday(2016,hlist)),format="Y-M-D")
+NYSclean$Day.Type2. <- factor(is.holiday(NYSclean$Date,myholidays), 
+                              levels=c(FALSE, TRUE), labels=c('not holiday', 'holiday'))
+
+#############################################
+## Merge to toll number file
+#############################################
+toll <- read.table("toll.csv", sep = ",", header = TRUE)
+NYSclean <- merge(NYSclean, toll, by=c("Entrance","Exit"), all=TRUE)
 
 str(NYSclean)
 head(NYSclean, 20)
