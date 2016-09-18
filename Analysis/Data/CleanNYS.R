@@ -83,6 +83,6 @@ NYSclean$Day.Type2. <- factor(is.holiday(NYSclean$Date,myholidays),
 #############################################
 toll <- read.table("toll.csv", sep = ",", header = TRUE)
 NYSclean <- merge(NYSclean, toll, by=c("Entrance","Exit"), all=TRUE)
-
+ 
 str(NYSclean)
 head(NYSclean, 20)
